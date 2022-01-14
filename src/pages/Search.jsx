@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
@@ -12,21 +13,24 @@ class Search extends Component {
       load: false,
       ready: false,
       bandsCalled: [],
+      resultName: '',
     };
   }
 
    callSearchAlbumsAPI = async (e) => {
      e.preventDefault();
+     this.setState({ bandsCalled: '' });
      const { bandName } = this.state;
      const result = await searchAlbumsAPI(bandName);
      this.setState({
        bandsCalled: result,
        ready: true,
+       resultName: bandName,
        bandName: '' });
    }
 
    render() {
-     const { invalMiLen, load, ready, bandsCalled } = this.state;
+     const { invalMiLen, load, ready, bandsCalled, resultName } = this.state;
      const searcher = (
        <label htmlFor="request">
          <input
@@ -56,19 +60,39 @@ class Search extends Component {
          </button>
        </label>);
 
-     const checkItsLoadingOver = (load ? (
-       <Loading />)
-       : (
-         <ol>
+     const checkItsLoadingOver = (
+       <div>
+         <header>
            { searcher }
-           {bandsCalled.map((bn) => (
-             <li
-               key={ bn.artistId }
-             >
-               { bn.artistName }
-             </li>))}
-         </ol>
-       ));
+         </header>
+         <h2>
+           { `Resultado  de álbuns de:  ${resultName} `}
+         </h2>
+
+         { load ? (
+           <Loading />
+         )
+           : (
+             <ol>
+               {bandsCalled.length ? bandsCalled.map((bn) => (
+                 <li
+                   key={ bn.artistId }
+                 >
+                   <header>
+                     {`${bn.artistName} || ${bn.collectionName}`}
+                     <img src={ bn.artworkUrl100 } alt={ bn.artistName } />
+                     <Link
+                       to={ `/album/${bn.collectionId}` }
+                       data-testid={ `link-to-album-${bn.collectionId}` }
+                     >
+                       More
+                     </Link>
+                   </header>
+                 </li>))
+                 : <li> Nenhum álbum foi encontrado</li>}
+             </ol>
+           )}
+       </div>);
      return (
        <div data-testid="page-search">
          <Header />
