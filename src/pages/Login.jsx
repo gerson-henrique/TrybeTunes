@@ -19,7 +19,7 @@ class Login extends Component {
     const { loginName } = this.state;
     this.setState({ isLoading: true });
     await createUser({ name: loginName });
-    this.setState({ ready: true });
+    this.setState({ isready: true });
   }
 
   render() {
