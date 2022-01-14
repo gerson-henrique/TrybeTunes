@@ -10,7 +10,7 @@ class Login extends Component {
       invalMiLen: true,
       loginName: '',
       isLoading: false,
-      ready: false,
+      isready: false,
     };
     this.callCreateUser = this.callCreateUser.bind(this);
   }
@@ -23,11 +23,11 @@ class Login extends Component {
   }
 
   render() {
-    const { invalMiLen, isLoading, ready } = this.state;
+    const { invalMiLen, isLoading, isready } = this.state;
     return (
       <div data-testid="page-login">
         <form>
-          {!ready ? (
+          {!isready ? (
             <label htmlFor="login">
               <input
                 data-testid="login-name-input"
