@@ -9,70 +9,77 @@ class Search extends Component {
     this.state = {
       invalMiLen: true,
       bandName: '',
-      isLoading: false,
+      load: false,
       ready: false,
       bandsCalled: [],
     };
   }
 
-  async callSearchAlbumsAPI() {
-    const { bandName } = this.state;
-    this.setState({
-      bandsCalled: await searchAlbumsAPI(bandName),
-      ready: true });
-  }
+   callSearchAlbumsAPI = async (e) => {
+     e.preventDefault();
+     const { bandName } = this.state;
+     const result = await searchAlbumsAPI(bandName);
+     this.setState({
+       bandsCalled: result,
+       ready: true,
+       bandName: '' });
+   }
 
-  render() {
-    const { invalMiLen, isLoading, ready, bandsCalled } = this.state;
-    const checkItsLoadingOver = (isLoading ? (
-      <Loading />)
-      : (
-        <ol>
-          {bandsCalled.map((bn) => (
-            <li
-              key={ bn.artistId }
-            >
-              { bn.artistName }
-            </li>))}
-        </ol>
-      ));
-    return (
-      <div data-testid="page-search">
-        <Header />
-        <form>
-          {!ready ? (
-            <label htmlFor="request">
-              <input
-                data-testid="search-artist-input"
-                onChange={ ({ target }) => {
-                  const minLen = 2;
-                  if (target.value.length >= minLen) {
-                    this.setState({
-                      invalMiLen: false,
-                      bandName: target.value,
-                    });
-                  } else {
-                    this.setState({
-                      invalMiLen: true,
-                      bandName: target.value,
-                    });
-                  }
-                } }
-              />
-              <button
-                data-testid="search-artist-button"
-                type="button"
-                disabled={ invalMiLen }
-                onClick={ this.callSearchAlbumsAPI }
-              >
-                Pesquisar
-              </button>
-            </label>
-          ) : checkItsLoadingOver}
-        </form>
-      </div>
-    );
-  }
+   render() {
+     const { invalMiLen, load, ready, bandsCalled } = this.state;
+     const searcher = (
+       <label htmlFor="request">
+         <input
+           data-testid="search-artist-input"
+           onChange={ ({ target }) => {
+             const minLen = 2;
+             if (target.value.length >= minLen) {
+               this.setState({
+                 invalMiLen: false,
+                 bandName: target.value,
+               });
+             } else {
+               this.setState({
+                 invalMiLen: true,
+                 bandName: target.value,
+               });
+             }
+           } }
+         />
+         <button
+           data-testid="search-artist-button"
+           type="button"
+           disabled={ invalMiLen }
+           onClick={ this.callSearchAlbumsAPI }
+         >
+           Pesquisar
+         </button>
+       </label>);
+
+     const checkItsLoadingOver = (load ? (
+       <Loading />)
+       : (
+         <ol>
+           { searcher }
+           {bandsCalled.map((bn) => (
+             <li
+               key={ bn.artistId }
+             >
+               { bn.artistName }
+             </li>))}
+         </ol>
+       ));
+     return (
+       <div data-testid="page-search">
+         <Header />
+         <form>
+           {!ready ? (
+             searcher
+           ) : checkItsLoadingOver}
+         </form>
+       </div>
+     );
+   }
 }
 
 export default Search;
