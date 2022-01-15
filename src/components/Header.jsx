@@ -15,7 +15,6 @@ export default class Header extends Component {
   }
 
   componentDidMount() {
-    console.log('componente montado');
     this.callGetUser();
   }
 
