@@ -4,6 +4,7 @@ import Header from '../components/Header';
 import getMusics from '../services/musicsAPI';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
+import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   constructor() {
@@ -13,10 +14,12 @@ class Album extends Component {
       ready: false,
       info: {},
       musics: [],
+      fav: [],
     };
   }
 
   componentDidMount() {
+    this.callGetFav();
     this.callGetMusics();
   }
 
@@ -31,9 +34,12 @@ class Album extends Component {
     }));
   }
 
+  callGetFav() {
+    this.setState({ fav: getFavoriteSongs() });
+  }
+
   render() {
-    const { info, ready, musics } = this.state;
-    // const { match: { params: { id } } } = this.props;
+    const { info, ready, musics, fav } = this.state;
     return (
       <div data-testid="page-album">
         <Header />
@@ -52,6 +58,8 @@ class Album extends Component {
                 music={ song.trackName }
                 prevUrl={ song.previewUrl }
                 track={ song.trackId }
+                fullMusicObj={ song }
+                favorite={ fav }
               />))}
             </div>
           )

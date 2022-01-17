@@ -12,8 +12,9 @@ export default class MusicCard extends Component {
   }
 
   callAddSong = async () => {
+    const { fullMusicObj } = this.props;
     this.setState({ loadingII: true });
-    await addSong();
+    await addSong({ fullMusicObj });
     this.setState({ loadingII: false });
   }
 
@@ -52,10 +53,12 @@ MusicCard.propTypes = {
   music: PropTypes.string,
   prevUrl: PropTypes.string,
   track: PropTypes.number,
+  fullMusicObj: PropTypes.string,
 };
 
 MusicCard.defaultProps = {
   music: '',
   prevUrl: '',
   track: '',
+  fullMusicObj: [],
 };
