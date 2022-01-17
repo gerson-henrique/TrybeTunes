@@ -4,7 +4,6 @@ import Header from '../components/Header';
 import getMusics from '../services/musicsAPI';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
-import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 
 class Album extends Component {
   constructor() {
@@ -14,12 +13,10 @@ class Album extends Component {
       ready: false,
       info: {},
       musics: [],
-      fav: [],
     };
   }
 
   componentDidMount() {
-    this.callGetFav();
     this.callGetMusics();
   }
 
@@ -32,10 +29,6 @@ class Album extends Component {
       info: prev.albumMList[0],
       musics: prev.albumMList.slice(1),
     }));
-  }
-
-  callGetFav() {
-    this.setState({ fav: getFavoriteSongs() });
   }
 
   render() {
