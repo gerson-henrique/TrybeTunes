@@ -12,7 +12,6 @@ export default class Header extends Component {
     };
     this.callGetUser = this.callGetUser.bind(this);
   }
-
   componentDidMount() {
     this.callGetUser();
   }
